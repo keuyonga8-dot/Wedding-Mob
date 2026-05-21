@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- HTML FILE: wedding_invitation_editor_V30_20260521.html -->
+<!-- HTML FILE: wedding_invitation_editor_V31_20260521.html -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>청첩장 에디터 V30</title>
+<title>청첩장 에디터 V31</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -69,8 +69,9 @@ html,body{height:100%;overflow:hidden}
     overflow:hidden;
   }
 
-  /* 데스크탑 패널 숨김 */
+  /* 데스크탑 패널 숨김 — 드로어 안으로 이동된 패널은 인라인 style로 덮어씀 */
   .panel{display:none}
+  .dpanel .panel,.dpanel>.panel{display:block}
 
   /* 프리뷰가 전체 */
   .preview{
@@ -1472,15 +1473,9 @@ $('#tokenDel').onclick=()=>{
     /* 오른쪽 패널 전체를 dpEdit으로 이동 */
     dpEdit.appendChild(rightPanel);
 
-    /* 패널 자체 스타일 모바일용으로 재설정 */
+    /* 중요: .panel{display:none} CSS 규칙을 인라인 스타일로 덮어씀 */
     [leftPanel,rightPanel].forEach(p=>{
-      p.style.flex='none';
-      p.style.height='auto';
-      p.style.maxHeight='none';
-      p.style.width='100%';
-      p.style.borderRight='none';
-      p.style.borderLeft='none';
-      p.style.padding='12px 14px 20px';
+      p.style.cssText='display:block!important;flex:none;height:auto;max-height:none;width:100%;border-right:none;border-left:none;padding:12px 14px 20px;overflow:visible';
     });
   }
 
