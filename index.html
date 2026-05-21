@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- HTML FILE: wedding_invitation_editor_V33_20260521.html -->
+<!-- HTML FILE: wedding_invitation_editor_V34_20260521.html -->
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>청첩장 에디터 V33</title>
+<title>청첩장 에디터 V34</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,10 +58,10 @@ html,body{height:100%;overflow:hidden}
    모바일 레이아웃
    전략: 패널은 항상 드로어 안에 있음
    데스크탑: .panelSlot을 flex row로 꺼내서 보임
-   모바일: .panelSlot 숨김, .drawer로 접근
+   모바일: 아래로 스크롤하면 설정 패널 표시
 ══════════════════════════════════════ */
 
-/* 데스크탑: panelSlot을 app 안 flex 아이템으로 표시 */
+/* ── 슬롯: 데스크탑에서 flex 패널로 ── */
 .panelSlot{
   flex:0 0 268px;height:100vh;overflow-y:auto;overflow-x:hidden;
   background:#fffaf2;
@@ -72,79 +72,61 @@ html,body{height:100%;overflow:hidden}
 .panelSlot:first-of-type{border-right:1px solid rgba(191,150,83,.18)}
 .panelSlot:last-of-type{border-left:1px solid rgba(191,150,83,.18)}
 
-/* 드로어/네비 — 데스크탑에서 숨김 */
-.mobileNav,.drawer{display:none}
+/* 드로어/네비 — 데스크탑 숨김 */
+/* 모바일 네비/드로어 미사용 */
 
+/* ══════════════════════
+   모바일: 세로 스크롤 레이아웃
+   카드 → 디자인 설정 → 문구 편집 순서로 쭉 내림
+══════════════════════ */
 @media(max-width:767px){
-  /* panelSlot 숨김 — 드로어로 접근 */
-  .panelSlot{display:none}
+  html,body{height:auto;overflow:auto}
 
-  .app{flex-direction:column;height:100dvh;overflow:hidden}
-  .preview{flex:1 1 0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
-  .tabBar{flex:0 0 44px;gap:6px}
-  .tabBar button{padding:5px 18px;font-size:12px}
-  .stage{padding:10px;flex:1 1 0;min-height:0}
+  .app{
+    display:block;        /* flex 해제 */
+    height:auto;
+    overflow:visible;
+    background:#ddd0b3;
+    padding-bottom:32px;
+  }
 
-  /* 하단 네비 */
-  .mobileNav{
-    display:flex;flex:0 0 56px;
-    background:#fffaf2;
-    border-top:1px solid rgba(191,150,83,.2);
-    box-shadow:0 -4px 16px rgba(50,35,20,.08);
-  }
-  .mobileNav button{
-    flex:1;border:0;background:transparent;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:3px;color:#9a8467;font:10px 'Gowun Dodum',sans-serif;cursor:pointer;padding:6px 0;
-  }
-  .mobileNav button.mActive{color:#bf9653}
-
-  /* 드로어 */
-  .drawer{
-    display:flex;flex-direction:column;
-    position:fixed;left:0;right:0;bottom:56px;
-    height:75dvh;
-    background:#fffaf2;
-    border-radius:20px 20px 0 0;
-    box-shadow:0 -8px 32px rgba(50,35,20,.16);
-    transform:translateY(110%);
-    transition:transform .28s cubic-bezier(.32,.72,0,1);
-    z-index:200;
-    overflow:hidden;
-  }
-  .drawer.open{transform:translateY(0)}
-
-  .drawerHandle{
-    flex:0 0 28px;display:flex;align-items:center;justify-content:center;cursor:grab;
-  }
-  .drawerHandle::after{
-    content:'';width:36px;height:4px;
-    background:rgba(191,150,83,.4);border-radius:99px;
-  }
-  .drawerTabs{
-    flex:0 0 40px;display:flex;
+  /* 앞/뒤 탭바 */
+  .preview{display:block;height:auto;overflow:visible}
+  .tabBar{
+    display:flex;position:sticky;top:0;z-index:50;
+    height:48px;gap:8px;
+    background:rgba(255,250,242,.96);
     border-bottom:1px solid rgba(191,150,83,.18);
+    backdrop-filter:blur(6px);
   }
-  .drawerTabs button{
-    flex:1;border:0;background:transparent;
-    font:13px 'Gowun Dodum',sans-serif;color:#9a8467;
-    border-bottom:2px solid transparent;cursor:pointer;padding:0;
-  }
-  .drawerTabs button.dActive{color:#bf9653;border-bottom-color:#bf9653}
+  .tabBar button{padding:6px 22px;font-size:13px}
 
-  .drawerBody{
-    flex:1 1 0;overflow-y:auto;overflow-x:hidden;
-    scrollbar-width:thin;scrollbar-color:#d9be84 rgba(255,255,255,.3);
+  /* 카드 스테이지 */
+  .stage{
+    display:flex;align-items:center;justify-content:center;
+    padding:16px 12px;
+    min-height:60vw;
+    overflow:visible;
   }
 
-  /* 탭 패널 */
-  .dpanel{display:none;padding:14px 14px 32px}
-  .dpanel.dshow{display:block}
+  /* 패널 슬롯: 모바일에서 세로로 펼침 */
+  .panelSlot{
+    display:block;
+    flex:none;
+    height:auto;
+    width:100%;
+    border:none;
+    border-top:6px solid rgba(191,150,83,.15);
+    padding:16px 16px 8px;
+    overflow:visible;
+  }
+  .panelSlot:first-of-type{border-right:none}
+  .panelSlot:last-of-type{border-left:none}
 
-  /* 드로어 안 패널 스타일 정상화 */
-  .dpanel .panel{
+  /* 패널 내부 */
+  .panel{
     display:block!important;
-    flex:none;height:auto;width:100%;
+    height:auto;width:100%;
     border:none;padding:0;overflow:visible;
     background:transparent;
   }
@@ -697,40 +679,6 @@ input[type=file]{display:none}
 
 </div>
 
-<!-- ═══ 모바일: 드로어 ═══ -->
-<div class="drawer" id="drawer">
-  <div class="drawerHandle" id="drawerHandle"></div>
-  <div class="drawerTabs">
-    <button id="dtDesign" class="dActive">디자인</button>
-    <button id="dtEdit">문구</button>
-    <button id="dtSave">저장</button>
-  </div>
-  <div class="drawerBody">
-    <div class="dpanel dshow" id="dpDesign"></div>
-    <div class="dpanel" id="dpEdit"></div>
-    <div class="dpanel" id="dpSave"></div>
-  </div>
-</div>
-
-<!-- ═══ 모바일: 하단 네비 ═══ -->
-<nav class="mobileNav" id="mobileNav">
-  <button id="mNavDesign">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;stroke-width:1.6"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-    디자인
-  </button>
-  <button id="mNavPreview" class="mActive">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;stroke-width:1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-    미리보기
-  </button>
-  <button id="mNavEdit">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;stroke-width:1.6"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-    문구
-  </button>
-  <button id="mNavSave">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:20px;height:20px;stroke-width:1.6"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-    저장
-  </button>
-</nav>
 
 </div>
 <script>
@@ -1432,92 +1380,7 @@ $('#tokenDel').onclick=()=>{
 /* ════════════════════════════════
    모바일 드로어
 ════════════════════════════════ */
-(function(){
-  if(window.innerWidth > 767) return;
 
-  var slotLeft  = document.getElementById('slotLeft');
-  var slotRight = document.getElementById('slotRight');
-  var dpDesign  = document.getElementById('dpDesign');
-  var dpEdit    = document.getElementById('dpEdit');
-  var dpSave    = document.getElementById('dpSave');
-  var drawer    = document.getElementById('drawer');
-  var handle    = document.getElementById('drawerHandle');
-
-  if(!slotLeft || !slotRight || !drawer) return;
-
-  /* 저장 섹션을 dpSave로 분리 */
-  var saveSec = slotLeft.querySelector('.sec:last-child');
-  if(saveSec) dpSave.appendChild(saveSec);
-
-  /* 슬롯을 드로어 탭에 이동 */
-  dpDesign.appendChild(slotLeft);
-  dpEdit.appendChild(slotRight);
-
-  /* display:none 강제 해제 */
-  [slotLeft, slotRight].forEach(function(el){
-    el.setAttribute('style',
-      'display:block !important;flex:none;height:auto;max-height:none;' +
-      'width:100%;border:none;padding:12px 14px 24px;overflow:visible;background:transparent'
-    );
-  });
-
-  /* 탭 전환 */
-  var currentTab = 'design';
-  function showTab(tab){
-    currentTab = tab;
-    ['Design','Edit','Save'].forEach(function(t){
-      var p = document.getElementById('dp'+t);
-      var b = document.getElementById('dt'+t);
-      var active = (t.toLowerCase() === tab);
-      if(p) p.style.display = active ? 'block' : 'none';
-      if(b){ if(active) b.classList.add('dActive'); else b.classList.remove('dActive'); }
-    });
-  }
-  showTab('design');
-
-  /* 드로어 열기/닫기 */
-  function openDrawer(tab){
-    drawer.classList.add('open');
-    showTab(tab || currentTab);
-    document.querySelectorAll('.mobileNav button').forEach(function(b){ b.classList.remove('mActive'); });
-    var tid = (tab || currentTab);
-    var nb = document.getElementById('mNav' + tid[0].toUpperCase() + tid.slice(1));
-    if(nb) nb.classList.add('mActive');
-  }
-  function closeDrawer(){
-    drawer.classList.remove('open');
-    document.querySelectorAll('.mobileNav button').forEach(function(b){ b.classList.remove('mActive'); });
-    var p = document.getElementById('mNavPreview');
-    if(p) p.classList.add('mActive');
-  }
-
-  /* 하단 네비 */
-  var nd = document.getElementById('mNavDesign');
-  var np = document.getElementById('mNavPreview');
-  var ne = document.getElementById('mNavEdit');
-  var ns = document.getElementById('mNavSave');
-  if(nd) nd.addEventListener('click', function(){ openDrawer('design'); });
-  if(np) np.addEventListener('click', function(){ closeDrawer(); });
-  if(ne) ne.addEventListener('click', function(){ openDrawer('edit'); });
-  if(ns) ns.addEventListener('click', function(){ openDrawer('save'); });
-
-  /* 드로어 탭 */
-  var dd = document.getElementById('dtDesign');
-  var de = document.getElementById('dtEdit');
-  var ds = document.getElementById('dtSave');
-  if(dd) dd.addEventListener('click', function(){ showTab('design'); });
-  if(de) de.addEventListener('click', function(){ showTab('edit'); });
-  if(ds) ds.addEventListener('click', function(){ showTab('save'); });
-
-  /* 핸들 스와이프 닫기 */
-  var startY = 0;
-  if(handle){
-    handle.addEventListener('touchstart', function(e){ startY = e.touches[0].clientY; }, {passive:true});
-    handle.addEventListener('touchend',   function(e){
-      if(e.changedTouches[0].clientY - startY > 50) closeDrawer();
-    }, {passive:true});
-  }
-})();
 
 /* nameInput 숨김 필드 동적 생성 (설정저장/불러오기 호환) */
 if(!$('#nameInput')){const h=document.createElement('input');h.type='hidden';h.id='nameInput';document.body.appendChild(h);}
